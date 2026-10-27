@@ -44,6 +44,11 @@ Project ต้องการแก้ปัญหานั่งทำงาน
 | Not Seated		| not detected			| not detected				|
 
 
+## Source Code
+
+- Arduino Sketch: [SPYNE/SPYNE.ino](SPYNE/SPYNE.ino)
+- Arduino Cloud Properties: [SPYNE/thingProperties.h](SPYNE/thingProperties.h)
+
 ## Contributors
 
 | ID        | Name                  	| Img                                                        |

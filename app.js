@@ -111,13 +111,13 @@ function setupPresentationVideo(youtubeUrl) {
   const frame = document.createElement('iframe');
 
   frame.src =
-    `https://www.youtube-nocookie.com/embed/${videoId}`;
+    `https://www.youtube.com/embed/${videoId}?rel=0`;
 
   frame.title = 'คลิปนำเสนอ SPYNE';
-  frame.loading = 'lazy';
+  frame.referrerPolicy = 'strict-origin-when-cross-origin';
 
   frame.allow =
-    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
 
   frame.allowFullscreen = true;
 

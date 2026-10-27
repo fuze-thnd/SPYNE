@@ -12,6 +12,7 @@
     <!-- การตั้งค่าหน้าเว็บ: ชื่อ คำอธิบาย และไฟล์ที่ใช้ -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="SPYNE โครงงาน Physical Computing ตรวจจับท่านั่งด้วย Ultrasonic Sensor สองระดับ — ต้นแบบระหว่างพัฒนา">
     <title>SPYNE — รู้ทันทุกท่านั่ง</title>
     <link rel="stylesheet" href="style.css">
@@ -526,337 +527,360 @@
         </details>
       </section>
 
-      <!-- 08B. Source Code — เนื้อหาโค้ดมาจาก source/SPYNE.ino -->
+      <!-- 08B. Source Code — เนื้อหาโค้ดมาจาก SPYNE/SPYNE.ino -->
       <section id="source-code" class="wrap source-section">
         <div class="section-head">
           <div>
             <p class="eyebrow">SOURCE CODE</p>
             <h2>โค้ดของโครงงาน</h2>
           </div>
-          <a class="button" href="source/SPYNE.ino" download>ดาวน์โหลด SPYNE.ino ↓</a>
+          <a class="button" href="SPYNE/SPYNE.ino" download>ดาวน์โหลด SPYNE.ino ↓</a>
         </div>
         <p>แสดงไฟล์ <code>SPYNE.ino</code> ฉบับที่ทีมแนบครบทุกบรรทัด โค้ดอยู่ระหว่างพัฒนาและยังไม่ใช่เวอร์ชันสุดท้าย</p>
         <div class="source-dependencies">
           <h3>ไฟล์และไลบรารีที่ใช้ร่วมกัน</h3>
-          <p>โปรแกรมเรียกใช้ <code>thingProperties.h</code> สำหรับการตั้งค่า Arduino Cloud และ <code>LiquidCrystal_I2C.h</code> สำหรับจอ LCD โดยไฟล์ที่ได้รับยังไม่มี <code>thingProperties.h</code> และข้อมูลการเชื่อมต่อของบอร์ด จึงต้องตั้งค่า Thing และตัวแปร Cloud ของทีมก่อนนำไปคอมไพล์ใช้งาน</p>
+          <p>โปรแกรมเรียกใช้ <code>thingProperties.h</code> สำหรับการตั้งค่า Arduino Cloud และ <code>LiquidCrystal_PCF8574.h</code> สำหรับจอ LCD โดยมีไฟล์ <code>thingProperties.h</code> อยู่ร่วมกันในโฟลเดอร์ <code>SPYNE/</code></p>
         </div>
         <details class="source-panel" open>
           <summary>SPYNE.ino — ดูโค้ดทั้งหมด</summary>
           <div class="source-toolbar">
-            <span>Arduino / C++ · <span id="source-line-count">308</span> บรรทัด</span>
+            <span>Arduino / C++ · <span id="source-line-count">330</span> บรรทัด</span>
             <button id="copy-source" type="button">คัดลอกโค้ด</button>
             <span id="copy-status" role="status" aria-live="polite"></span>
           </div>
-          <pre class="source-code" tabindex="0" aria-label="Source Code SPYNE.ino"><code id="firmware-code">#include "thingProperties.h"
-#include &lt;LiquidCrystal_I2C.h&gt;
+          <pre class="source-code" tabindex="0" aria-label="Source Code SPYNE.ino"><code id="firmware-code"><span class="token-preproc">#include &lt;Wire.h&gt;</span>
+<span class="token-preproc">#include &lt;LiquidCrystal_PCF8574.h&gt;</span>
+<span class="token-preproc">#include "thingProperties.h"</span>
 
-// ultrasonic sensor
-const int HEAD_TRIG = 2;
-const int HEAD_ECHO = 3;
-const int CHEST_TRIG = 4;
-const int CHEST_ECHO = 5;
-const int NO_ECHO = 350;
+<span class="token-comment">// ultrasonic sensor</span>
+<span class="token-type">const</span> <span class="token-type">int</span> HEAD_TRIG = <span class="token-number">7</span>;
+<span class="token-type">const</span> <span class="token-type">int</span> HEAD_ECHO = <span class="token-number">3</span>;
+<span class="token-type">const</span> <span class="token-type">int</span> CHEST_TRIG = <span class="token-number">4</span>;
+<span class="token-type">const</span> <span class="token-type">int</span> CHEST_ECHO = <span class="token-number">5</span>;
+<span class="token-type">const</span> <span class="token-type">int</span> NO_ECHO = <span class="token-number">350</span>;
 
-// passive buzzer
-const int BUZZER_PIN = 6;
-const int TONE = 1000; // change tone
+<span class="token-comment">// passive buzzer</span>
+<span class="token-type">const</span> <span class="token-type">int</span> BUZZER_PIN = <span class="token-number">6</span>;
+<span class="token-type">const</span> <span class="token-type">int</span> TONE = <span class="token-number">1000</span>; <span class="token-comment">// change tone</span>
 
-// RGB LED
-const int LED_R = 9;
-const int LED_G = 10;
-const int LED_B = 11;
+<span class="token-comment">// RGB LED</span>
+<span class="token-type">const</span> <span class="token-type">int</span> LED_R = <span class="token-number">9</span>;
+<span class="token-type">const</span> <span class="token-type">int</span> LED_G = <span class="token-number">10</span>;
+<span class="token-type">const</span> <span class="token-type">int</span> LED_B = <span class="token-number">11</span>;
 
-// liquid crystal
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+<span class="token-comment">// liquid crystal</span>
+<span class="token-type">LiquidCrystal_PCF8574</span> <span class="token-builtin">lcd</span>(<span class="token-number">0x27</span>);
 
-// local variable
-const int SENSOR_INTERVAL  = 250;
-const int CLOUD_INTERVAL   = 3000; // 3 seconds
-const int ALERT_DELAY      = 10000; // wrong position more than this will triggered
-const int OUT_FRAME_MARGIN = 50;
-const int STATE_CONFIRM    = 4; // need to hold 4 sensor cycles
+<span class="token-comment">// local variable</span>
+<span class="token-type">const</span> <span class="token-type">int</span> SENSOR_INTERVAL  = <span class="token-number">250</span>;
+<span class="token-type">const</span> <span class="token-type">int</span> CLOUD_INTERVAL   = <span class="token-number">3000</span>; <span class="token-comment">// 3 seconds</span>
+<span class="token-type">const</span> <span class="token-type">int</span> ALERT_DELAY      = <span class="token-number">10000</span>; <span class="token-comment">// wrong position more than this will triggered</span>
+<span class="token-type">const</span> <span class="token-type">int</span> OUT_FRAME_MARGIN = <span class="token-number">50</span>;
+<span class="token-type">const</span> <span class="token-type">int</span> STATE_CONFIRM    = <span class="token-number">4</span>; <span class="token-comment">// need to hold 4 sensor cycles</span>
 
-int local_head_distance;
-int local_chest_distance;
-int head_base_line  = 55; // default can changed
-int chest_base_line = 60; // default can changed
+<span class="token-type">int</span> local_head_distance;
+<span class="token-type">int</span> local_chest_distance;
+<span class="token-type">int</span> head_base_line  = <span class="token-number">55</span>; <span class="token-comment">// default can changed</span>
+<span class="token-type">int</span> chest_base_line = <span class="token-number">60</span>; <span class="token-comment">// default can changed</span>
 
-bool calibrateRequested = false;
+<span class="token-type">bool</span> calibrateRequested = <span class="token-constant">false</span>;
 
-String candidateState = "";
-int candidateCount = 0;
+<span class="token-type">String</span> candidateState = <span class="token-string">""</span>;
+<span class="token-type">int</span> candidateCount = <span class="token-number">0</span>;
 
-// time control variable
-unsigned long now;
-unsigned long previousRead;
-unsigned long lastCloudSync;
-unsigned long badPostureStartTime = 0;
-bool isBadPosture = false;
+<span class="token-comment">// time control variable</span>
+<span class="token-type">unsigned</span> <span class="token-type">long</span> now;
+<span class="token-type">unsigned</span> <span class="token-type">long</span> previousRead;
+<span class="token-type">unsigned</span> <span class="token-type">long</span> lastCloudSync;
+<span class="token-type">unsigned</span> <span class="token-type">long</span> badPostureStartTime = <span class="token-number">0</span>;
+<span class="token-type">bool</span> isBadPosture = <span class="token-constant">false</span>;
 
-void setup()
+<span class="token-type">void</span> <span class="token-builtin">setup</span>()
 {
-  Serial.begin(9600);
-  delay(1500); // delay gives the chance to wait for a Serial Monitor
+  <span class="token-builtin">Serial</span>.<span class="token-builtin">begin</span>(<span class="token-number">9600</span>);
+  <span class="token-builtin">delay</span>(<span class="token-number">1500</span>); <span class="token-comment">// delay gives the chance to wait for a Serial Monitor</span>
 
-  pinMode(HEAD_TRIG,  OUTPUT);
-  pinMode(HEAD_ECHO,  INPUT);
-  pinMode(CHEST_TRIG, OUTPUT);
-  pinMode(CHEST_ECHO, INPUT);
+  <span class="token-builtin">pinMode</span>(HEAD_TRIG,  <span class="token-constant">OUTPUT</span>);
+  <span class="token-builtin">pinMode</span>(HEAD_ECHO,  <span class="token-constant">INPUT</span>);
+  <span class="token-builtin">pinMode</span>(CHEST_TRIG, <span class="token-constant">OUTPUT</span>);
+  <span class="token-builtin">pinMode</span>(CHEST_ECHO, <span class="token-constant">INPUT</span>);
 
-  pinMode(LED_R, OUTPUT);
-  pinMode(LED_G, OUTPUT);
-  pinMode(LED_B, OUTPUT);
+  <span class="token-builtin">pinMode</span>(LED_R, <span class="token-constant">OUTPUT</span>);
+  <span class="token-builtin">pinMode</span>(LED_G, <span class="token-constant">OUTPUT</span>);
+  <span class="token-builtin">pinMode</span>(LED_B, <span class="token-constant">OUTPUT</span>);
 
-  // no pin setup need for passive buzzer
+  <span class="token-comment">// no pin setup need for passive buzzer</span>
 
-  lcd.init();
-  lcd.backlight();
-  lcd.print("SPYNE Starting..");
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">begin</span>(<span class="token-number">16</span>,<span class="token-number">2</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">setBacklight</span>(<span class="token-number">255</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"SPYNE Starting.."</span>);
 
-  // Connecting to Arduino IOT Cloud
-  initProperties();
-  ArduinoCloud.begin(ArduinoIoTPreferredConnection);
-  setDebugMessageLevel(2);
-  ArduinoCloud.printDebugInfo();
+  <span class="token-comment">// Connecting to Arduino IOT Cloud</span>
+  <span class="token-builtin">initProperties</span>();
+  <span class="token-builtin">ArduinoCloud</span>.<span class="token-builtin">begin</span>(ArduinoIoTPreferredConnection);
+  <span class="token-builtin">setDebugMessageLevel</span>(<span class="token-number">2</span>);
+  <span class="token-builtin">ArduinoCloud</span>.<span class="token-builtin">printDebugInfo</span>();
 
-  while (ArduinoCloud.connected() == 0) { // blink Blue while not connected
-    ArduinoCloud.update(); // Keep background connection
-    setColor(0, 0, 255); // Blink Blue
-    delay(300);
-    setColor(0, 0, 0);
-    delay(300);
-    Serial.print(".");
+  
+  <span class="token-keyword">while</span> (<span class="token-builtin">ArduinoCloud</span>.<span class="token-builtin">connected</span>() == <span class="token-number">0</span>) { <span class="token-comment">// blink Blue while not connected</span>
+    <span class="token-builtin">ArduinoCloud</span>.<span class="token-builtin">update</span>(); <span class="token-comment">// Keep background connection</span>
+    <span class="token-builtin">setColor</span>(<span class="token-number">0</span>, <span class="token-number">0</span>, <span class="token-number">255</span>); <span class="token-comment">// Blink Blue</span>
+    <span class="token-builtin">delay</span>(<span class="token-number">300</span>);
+    <span class="token-builtin">setColor</span>(<span class="token-number">0</span>, <span class="token-number">0</span>, <span class="token-number">0</span>);
+    <span class="token-builtin">delay</span>(<span class="token-number">300</span>);
   }
   
-  setColor(0, 255, 0);
-  lcd.clear();
-  postureState = "NOT SITTING";
-  lcd.print("Connected!");
-  delay(1000);
-  lcd.clear();
+  <span class="token-builtin">setColor</span>(<span class="token-number">0</span>, <span class="token-number">255</span>, <span class="token-number">0</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">clear</span>();
+  postureState = <span class="token-string">"NOT SITTING"</span>;
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"Connected!"</span>);
+  <span class="token-builtin">delay</span>(<span class="token-number">1000</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">clear</span>();
 }
 
-// +-----------+
-// | MAIN LOOP |
-// +-----------+
-void loop()
+<span class="token-comment">// +-----------+</span>
+<span class="token-comment">// | MAIN LOOP |</span>
+<span class="token-comment">// +-----------+</span>
+<span class="token-type">void</span> <span class="token-builtin">loop</span>()
 {
-  ArduinoCloud.update();
+  <span class="token-builtin">ArduinoCloud</span>.<span class="token-builtin">update</span>();
 
-  if (calibrateRequested) { // calibration
-    calibrateRequested = false;
-    runCalibration();
-    calibrateTrigger = false;
+  <span class="token-keyword">if</span> (calibrateRequested) { <span class="token-comment">// calibration</span>
+    calibrateRequested = <span class="token-constant">false</span>;
+    <span class="token-builtin">runCalibration</span>();
+    calibrateTrigger = <span class="token-constant">false</span>;
   }
 
-  now = millis();
-  // read from sensor
-  if (now - previousRead &gt;= SENSOR_INTERVAL) {
+  now = <span class="token-builtin">millis</span>();
+  <span class="token-comment">// read from sensor</span>
+  <span class="token-keyword">if</span> (now - previousRead &gt;= SENSOR_INTERVAL) {
     previousRead = now;
-    local_head_distance = readFiltered(HEAD_TRIG, HEAD_ECHO);
-    delay(30);
-    local_chest_distance = readFiltered(CHEST_TRIG, CHEST_ECHO);
+    local_head_distance = <span class="token-builtin">readFiltered</span>(HEAD_TRIG, HEAD_ECHO);
+    <span class="token-builtin">delay</span>(<span class="token-number">30</span>);
+    local_chest_distance = <span class="token-builtin">readFiltered</span>(CHEST_TRIG, CHEST_ECHO);
+    <span class="token-builtin">Serial</span>.<span class="token-builtin">print</span>(<span class="token-string">"Head "</span>);
+    <span class="token-builtin">Serial</span>.<span class="token-builtin">print</span>(local_head_distance);
+    <span class="token-builtin">Serial</span>.<span class="token-builtin">print</span>(<span class="token-string">" Chest "</span>);
+    <span class="token-builtin">Serial</span>.<span class="token-builtin">println</span>(local_chest_distance);
 
-    classifyPosture();
+    <span class="token-builtin">classifyPosture</span>();
 
-    displayLocalFeedback();
+    <span class="token-builtin">displayLocalFeedback</span>();
   }
 
-  // sync distance to cloud
-  if (now - lastCloudSync &gt;= CLOUD_INTERVAL) {
+  <span class="token-comment">// sync distance to cloud</span>
+  <span class="token-keyword">if</span> (now - lastCloudSync &gt;= CLOUD_INTERVAL) {
     lastCloudSync = now;
     headDistance = local_head_distance;
     chestDistance = local_chest_distance;
   }
 }
 
-void setColor(int r, int g, int b) {
-  analogWrite(LED_R, r);
-  analogWrite(LED_G, g);
-  analogWrite(LED_B, b);
+<span class="token-type">void</span> <span class="token-builtin">setColor</span>(<span class="token-type">int</span> r, <span class="token-type">int</span> g, <span class="token-type">int</span> b) {
+  <span class="token-builtin">analogWrite</span>(LED_R, <span class="token-number">255</span> - r);
+  <span class="token-builtin">analogWrite</span>(LED_G, <span class="token-number">255</span> - g);
+  <span class="token-builtin">analogWrite</span>(LED_B, <span class="token-number">255</span> - b);
 }
 
-int readUltrasonicSensor(int trig, int echo) {
-  digitalWrite(trig, LOW);
-  delayMicroseconds(10);
-  digitalWrite(trig, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trig, LOW);
+<span class="token-type">int</span> <span class="token-builtin">readUltrasonicSensor</span>(<span class="token-type">int</span> trig, <span class="token-type">int</span> echo) {
+  <span class="token-builtin">digitalWrite</span>(trig, <span class="token-constant">LOW</span>);
+  <span class="token-builtin">delayMicroseconds</span>(<span class="token-number">10</span>);
+  <span class="token-builtin">digitalWrite</span>(trig, <span class="token-constant">HIGH</span>);
+  <span class="token-builtin">delayMicroseconds</span>(<span class="token-number">10</span>);
+  <span class="token-builtin">digitalWrite</span>(trig, <span class="token-constant">LOW</span>);
 
-  long pulseWidth = pulseIn(echo, HIGH, 25000); // timeout 25ms
-  if (pulseWidth == 0) { // timeout
-    return NO_ECHO;
+  <span class="token-type">long</span> pulseWidth = <span class="token-builtin">pulseIn</span>(echo, <span class="token-constant">HIGH</span>, <span class="token-number">25000</span>); <span class="token-comment">// timeout 25ms</span>
+  <span class="token-keyword">if</span> (pulseWidth == <span class="token-number">0</span>) { <span class="token-comment">// timeout</span>
+    <span class="token-keyword">return</span> NO_ECHO;
   }
-  return pulseWidth*0.0343/2.0;
+  <span class="token-keyword">return</span> pulseWidth*<span class="token-number">0.0343</span>/<span class="token-number">2.0</span>;
 }
 
-int readFiltered(int trig, int echo) {
-  int sum = 0;
-  int count = 0;
-  for (int i=0; i&lt;3; i++) {
-    int d = readUltrasonicSensor(trig, echo);
-    if (d &lt; NO_ECHO) { // ignore timeout
+<span class="token-type">int</span> <span class="token-builtin">readFiltered</span>(<span class="token-type">int</span> trig, <span class="token-type">int</span> echo) {
+  <span class="token-type">int</span> sum = <span class="token-number">0</span>;
+  <span class="token-type">int</span> count = <span class="token-number">0</span>;
+  <span class="token-keyword">for</span> (<span class="token-type">int</span> i=<span class="token-number">0</span>; i&lt;<span class="token-number">3</span>; i++) {
+    <span class="token-type">int</span> d = <span class="token-builtin">readUltrasonicSensor</span>(trig, echo);
+    <span class="token-keyword">if</span> (d &lt; NO_ECHO) { <span class="token-comment">// ignore timeout</span>
       sum += d;
       count++;
     }
-    delay(15);
+    <span class="token-builtin">delay</span>(<span class="token-number">15</span>);
   }
-  if (count == 0) return NO_ECHO;   // all 3 timed out
-  return sum / count;
+  <span class="token-keyword">if</span> (count == <span class="token-number">0</span>) <span class="token-keyword">return</span> NO_ECHO;   <span class="token-comment">// all 3 timed out</span>
+  <span class="token-keyword">return</span> sum / count;
 }
 
-void runCalibration() {
-  // count down 3 seconds and set head_base_line and chest_base_line
-  int SAMPLES = 10;
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Sit Upright!");
-  lcd.setCursor(0,1);
-  lcd.print("Calibrate in: ");
-  for (int i=3; i&gt;0; i--) {
-    ArduinoCloud.update(); // Keep background connection
-    lcd.setCursor(14,1);
-    lcd.print(i);
-    setColor(0, 255, 255);
-    tone(BUZZER_PIN, 400, 300); // change count down tone
-    delay(300);
-    setColor(0, 0, 0);
-    delay(700);
+<span class="token-type">void</span> <span class="token-builtin">runCalibration</span>() {
+  <span class="token-comment">// count down 3 seconds and set head_base_line and chest_base_line</span>
+  <span class="token-type">int</span> SAMPLES = <span class="token-number">10</span>;
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">clear</span>();
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">setCursor</span>(<span class="token-number">0</span>,<span class="token-number">0</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"Sit Upright!"</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">setCursor</span>(<span class="token-number">0</span>,<span class="token-number">1</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"Calibrate in: "</span>);
+  <span class="token-keyword">for</span> (<span class="token-type">int</span> i=<span class="token-number">3</span>; i&gt;<span class="token-number">0</span>; i--) {
+    <span class="token-builtin">ArduinoCloud</span>.<span class="token-builtin">update</span>(); <span class="token-comment">// Keep background connection</span>
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">setCursor</span>(<span class="token-number">14</span>,<span class="token-number">1</span>);
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(i);
+    <span class="token-builtin">setColor</span>(<span class="token-number">0</span>, <span class="token-number">255</span>, <span class="token-number">255</span>);
+  <span class="token-comment">//  tone(BUZZER_PIN, 400, 300); // change count down tone</span>
+    <span class="token-builtin">delay</span>(<span class="token-number">300</span>);
+    <span class="token-builtin">setColor</span>(<span class="token-number">0</span>, <span class="token-number">0</span>, <span class="token-number">0</span>);
+    <span class="token-builtin">delay</span>(<span class="token-number">700</span>);
   }
-  tone(BUZZER_PIN, TONE, 100);
+  <span class="token-comment">//tone(BUZZER_PIN, TONE, 100);</span>
 
-  long sumH = 0, sumC = 0;
-  for (int s=0; s&lt;SAMPLES; s++) {
-    sumH += readUltrasonicSensor(HEAD_TRIG, HEAD_ECHO);
-    delay(35);
-    sumC += readUltrasonicSensor(CHEST_TRIG, CHEST_ECHO);
-    delay(35);
+  <span class="token-type">long</span> sumH = <span class="token-number">0</span>, sumC = <span class="token-number">0</span>;
+  <span class="token-type">int</span> countH = <span class="token-number">0</span>, countC= <span class="token-number">0</span>;
+  <span class="token-keyword">for</span> (<span class="token-type">int</span> s=<span class="token-number">0</span>; s&lt;SAMPLES; s++) {
+    <span class="token-type">int</span> h = <span class="token-builtin">readUltrasonicSensor</span>(HEAD_TRIG, HEAD_ECHO);
+    <span class="token-builtin">delay</span>(<span class="token-number">35</span>);
+    <span class="token-type">int</span> c = <span class="token-builtin">readUltrasonicSensor</span>(CHEST_TRIG, CHEST_ECHO);
+    <span class="token-builtin">delay</span>(<span class="token-number">35</span>);
+    <span class="token-keyword">if</span> (h &lt; NO_ECHO) { <span class="token-comment">// skip time out</span>
+      sumH += h;
+      countH++;
+    }
+    <span class="token-keyword">if</span> (c &lt; NO_ECHO) { <span class="token-comment">// skip time out</span>
+      sumC += c;
+      countC++;
+    }
   }
 
-  head_base_line  = sumH / SAMPLES;
-  chest_base_line = sumC / SAMPLES;
+  <span class="token-type">bool</span> ok = (countH &gt;= <span class="token-number">5</span>) &amp;&amp; (countC &gt;= <span class="token-number">5</span>);
+  <span class="token-keyword">if</span> (ok) {
+    head_base_line  = sumH / countH;
+    chest_base_line = sumC / countC;
 
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Saved Baseline!");
-  lcd.setCursor(0, 1);
-  lcd.print("H:"); 
-  lcd.print(head_base_line);
-  lcd.print("cm C:"); 
-  lcd.print(chest_base_line); 
-  lcd.print("cm");
-  tone(BUZZER_PIN, TONE, 100);
-
-  delay(2000);
-  lcd.clear();
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">clear</span>();
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">setCursor</span>(<span class="token-number">0</span>, <span class="token-number">0</span>);
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"Saved Baseline!"</span>);
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">setCursor</span>(<span class="token-number">0</span>, <span class="token-number">1</span>);
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"H:"</span>); 
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(head_base_line);
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"cm C:"</span>); 
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(chest_base_line); 
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"cm"</span>);
+    <span class="token-builtin">tone</span>(BUZZER_PIN, TONE, <span class="token-number">100</span>);
+  } <span class="token-keyword">else</span> {
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"Calibrate FAILED"</span>);
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">setCursor</span>(<span class="token-number">0</span>,<span class="token-number">1</span>);
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"Try Again"</span>);
+    <span class="token-builtin">tone</span>(BUZZER_PIN, <span class="token-number">300</span>, <span class="token-number">500</span>);
+  }
+  
+  <span class="token-builtin">delay</span>(<span class="token-number">2000</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">clear</span>();
 }
 
-String computeState() {
-  int tol = (toleranceDistance &gt; 0) ? toleranceDistance : 6;
+<span class="token-type">String</span> <span class="token-builtin">computeState</span>() {
+  <span class="token-type">int</span> tol = (toleranceDistance &gt; <span class="token-number">0</span>) ? toleranceDistance : <span class="token-number">6</span>;
 
-  bool headOutFrame  = local_head_distance  &gt; (head_base_line  + OUT_FRAME_MARGIN);
-  bool chestOutFrame = local_chest_distance &gt; (chest_base_line + OUT_FRAME_MARGIN);
+  <span class="token-type">bool</span> headOutFrame  = local_head_distance  &gt; (head_base_line  + OUT_FRAME_MARGIN);
+  <span class="token-type">bool</span> chestOutFrame = local_chest_distance &gt; (chest_base_line + OUT_FRAME_MARGIN);
 
-  bool headNormal  = abs(local_head_distance  - head_base_line)  &lt;= tol;
-  bool chestNormal = abs(local_chest_distance - chest_base_line) &lt;= tol;
+  <span class="token-type">bool</span> headNormal  = <span class="token-builtin">abs</span>(local_head_distance  - head_base_line)  &lt;= tol;
+  <span class="token-type">bool</span> chestNormal = <span class="token-builtin">abs</span>(local_chest_distance - chest_base_line) &lt;= tol;
 
-  bool headNear  = local_head_distance  &lt; (head_base_line  - tol);
-  bool chestNear = local_chest_distance &lt; (chest_base_line - tol);
+  <span class="token-type">bool</span> headNear  = local_head_distance  &lt; (head_base_line  - tol);
+  <span class="token-type">bool</span> chestNear = local_chest_distance &lt; (chest_base_line - tol);
 
-  bool headFar   = local_head_distance  &gt; (head_base_line  + tol);
-  bool chestFar  = local_chest_distance &gt; (chest_base_line + tol);
+  <span class="token-type">bool</span> headFar   = local_head_distance  &gt; (head_base_line  + tol);
+  <span class="token-type">bool</span> chestFar  = local_chest_distance &gt; (chest_base_line + tol);
 
-  if (headOutFrame &amp;&amp; chestOutFrame)        return "NOT SITTING";
-  if (headNormal &amp;&amp; chestNormal)            return "UPRIGHT";
-  if (headNear &amp;&amp; chestNear)                return "TOO CLOSE";
-  if (headFar &amp;&amp; chestFar)                  return "TOO FAR";
-  if (headNear &amp;&amp; chestNormal)              return "HEAD FORWARD";
-  if (chestFar &amp;&amp; (headNormal || headNear)) return "SLIDE / SLUMP";
-  return "UNBALANCED";
+  <span class="token-keyword">if</span> (headOutFrame &amp;&amp; chestOutFrame)         <span class="token-keyword">return</span> <span class="token-string">"NOT SITTING"</span>;
+  <span class="token-keyword">if</span> (headNormal &amp;&amp; chestNormal)             <span class="token-keyword">return</span> <span class="token-string">"UPRIGHT"</span>;
+  <span class="token-keyword">if</span> (headNear &amp;&amp; chestNear)                 <span class="token-keyword">return</span> <span class="token-string">"TOO CLOSE"</span>;
+  <span class="token-keyword">if</span> (headFar &amp;&amp; chestFar)                   <span class="token-keyword">return</span> <span class="token-string">"TOO FAR"</span>;
+  <span class="token-keyword">if</span> (headNear &amp;&amp; chestNormal)               <span class="token-keyword">return</span> <span class="token-string">"HEAD FORWARD"</span>;
+  <span class="token-keyword">if</span> (chestFar &amp;&amp; (headFar || headOutFrame)) <span class="token-keyword">return</span> <span class="token-string">"SLIDE / SLUMP"</span>;
+  <span class="token-keyword">return</span> <span class="token-string">"UNBALANCED"</span>; <span class="token-comment">// else</span>
 }
 
-void classifyPosture() {
-  String raw = computeState();
+<span class="token-type">void</span> <span class="token-builtin">classifyPosture</span>() {
+  <span class="token-type">String</span> raw = <span class="token-builtin">computeState</span>();
 
-  if (raw == postureState) {          // stable
-    candidateCount = 0;
-    candidateState = "";
-  } else if (raw == candidateState) { // same new state again
-    if (++candidateCount &gt;= STATE_CONFIRM) {
+  <span class="token-keyword">if</span> (raw == postureState) {          <span class="token-comment">// stable</span>
+    candidateCount = <span class="token-number">0</span>;
+    candidateState = <span class="token-string">""</span>;
+  } <span class="token-keyword">else</span> <span class="token-keyword">if</span> (raw == candidateState) { <span class="token-comment">// same new state again</span>
+    <span class="token-keyword">if</span> (++candidateCount &gt;= STATE_CONFIRM) {
       postureState = raw;
-      candidateCount = 0;
-      candidateState = "";
+      candidateCount = <span class="token-number">0</span>;
+      candidateState = <span class="token-string">""</span>;
     }
-  } else {                            // different state, start counting
+  } <span class="token-keyword">else</span> {                            <span class="token-comment">// different state, start counting</span>
     candidateState = raw;
-    candidateCount = 1;
+    candidateCount = <span class="token-number">1</span>;
   }
 }
 
-void displayLocalFeedback() {
-  static unsigned long lastBeepTime = 0;
-  // row 1: head and chest distance
-  lcd.setCursor(0, 0);
-  lcd.print("H:");
-  lcd.print(local_head_distance);
-  lcd.print("cm  ");
-  lcd.setCursor(8, 0);
-  lcd.print("C:");
-  lcd.print(local_chest_distance);
-  lcd.print("cm   ");
+<span class="token-type">void</span> <span class="token-builtin">displayLocalFeedback</span>() {
+  <span class="token-type">static</span> <span class="token-type">unsigned</span> <span class="token-type">long</span> lastBeepTime = <span class="token-number">0</span>;
+  <span class="token-comment">// row 1: head and chest distance</span>
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">setCursor</span>(<span class="token-number">0</span>, <span class="token-number">0</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"H:"</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(local_head_distance);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"cm  "</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">setCursor</span>(<span class="token-number">8</span>, <span class="token-number">0</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"C:"</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(local_chest_distance);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">"cm   "</span>);
 
-  // row 2: posture
-  lcd.setCursor(0, 1);
-  lcd.print(postureState);
-  for (int i = postureState.length(); i &lt; 16; i++) {
-    lcd.print(" "); // clear old String
+  <span class="token-comment">// row 2: posture</span>
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">setCursor</span>(<span class="token-number">0</span>, <span class="token-number">1</span>);
+  <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(postureState);
+  <span class="token-keyword">for</span> (<span class="token-type">int</span> i = postureState.length(); i &lt; <span class="token-number">16</span>; i++) {
+    <span class="token-builtin">lcd</span>.<span class="token-builtin">print</span>(<span class="token-string">" "</span>); <span class="token-comment">// clear old String</span>
   }
 
-  // RGB and passive buzzer control
-  if (postureState == "UPRIGHT") {
-    setColor(0, 255, 0); // green
-    isBadPosture = false;
+  <span class="token-comment">// RGB and passive buzzer control</span>
+  <span class="token-keyword">if</span> (postureState == <span class="token-string">"UPRIGHT"</span>) {
+    <span class="token-builtin">setColor</span>(<span class="token-number">0</span>, <span class="token-number">255</span>, <span class="token-number">0</span>); <span class="token-comment">// green</span>
+    isBadPosture = <span class="token-constant">false</span>;
   } 
-  else if (postureState == "NOT SITTING") {
-    setColor(0, 0, 255); // blue
-    isBadPosture = false;
+  <span class="token-keyword">else</span> <span class="token-keyword">if</span> (postureState == <span class="token-string">"NOT SITTING"</span>) {
+    <span class="token-builtin">setColor</span>(<span class="token-number">0</span>, <span class="token-number">0</span>, <span class="token-number">255</span>); <span class="token-comment">// blue</span>
+    isBadPosture = <span class="token-constant">false</span>;
   } 
-  else { // else is bad posture: (Too Close, Too Far, Head Forward, Slide)
-    if (!isBadPosture) {
-      badPostureStartTime = millis();
-      isBadPosture = true;
+  <span class="token-keyword">else</span> { <span class="token-comment">// else is bad posture: (Too Close, Too Far, Head Forward, Slide)</span>
+    <span class="token-keyword">if</span> (!isBadPosture) {
+      badPostureStartTime = <span class="token-builtin">millis</span>();
+      isBadPosture = <span class="token-constant">true</span>;
     }
 
-    unsigned long badDuration = millis() - badPostureStartTime;
-    if (badDuration &lt; ALERT_DELAY) {
-      setColor(255, 180, 0); // 1st warning: yellow RGB, no Buzzer
-    } else {
-      setColor(255, 0, 0);   // 2nd warning: red RGB, Buzzer sound
-      if (millis() - lastBeepTime &gt;= 1000) {
-        lastBeepTime = millis();
-        tone(BUZZER_PIN, TONE, 50);
+    <span class="token-type">unsigned</span> <span class="token-type">long</span> badDuration = <span class="token-builtin">millis</span>() - badPostureStartTime;
+    <span class="token-keyword">if</span> (badDuration &lt; ALERT_DELAY) {
+      <span class="token-builtin">setColor</span>(<span class="token-number">255</span>, <span class="token-number">180</span>, <span class="token-number">0</span>); <span class="token-comment">// 1st warning: yellow RGB, no Buzzer</span>
+    } <span class="token-keyword">else</span> {
+      <span class="token-builtin">setColor</span>(<span class="token-number">255</span>, <span class="token-number">0</span>, <span class="token-number">0</span>);   <span class="token-comment">// 2nd warning: red RGB, Buzzer sound</span>
+      <span class="token-keyword">if</span> (<span class="token-builtin">millis</span>() - lastBeepTime &gt;= <span class="token-number">1000</span>) {
+        lastBeepTime = <span class="token-builtin">millis</span>();
+        <span class="token-builtin">tone</span>(BUZZER_PIN, TONE, <span class="token-number">50</span>);
       }
     }
   }
 }
 
-// +----------------+
-// | CLOUD FUNCTION |
-// +----------------+
+<span class="token-comment">// +----------------+</span>
+<span class="token-comment">// | CLOUD FUNCTION |</span>
+<span class="token-comment">// +----------------+</span>
 
-void onCalibrateTriggerChange()  {
-  if (calibrateTrigger) {
-    calibrateRequested = true;
+<span class="token-type">void</span> onCalibrateTriggerChange()  {
+  <span class="token-keyword">if</span> (calibrateTrigger) {
+    calibrateRequested = <span class="token-constant">true</span>;
   }
 }
 
-void onToleranceDistanceChange()  {
-  Serial.print("New Tolerance from Cloud: +/- ");
-  Serial.print(toleranceDistance);
-  Serial.println(" cm");
+<span class="token-type">void</span> onToleranceDistanceChange()  {
+  <span class="token-builtin">Serial</span>.<span class="token-builtin">print</span>(<span class="token-string">"New Tolerance from Cloud: +/- "</span>);
+  <span class="token-builtin">Serial</span>.<span class="token-builtin">print</span>(toleranceDistance);
+  <span class="token-builtin">Serial</span>.<span class="token-builtin">println</span>(<span class="token-string">" cm"</span>);
 }</code></pre>
         </details>
         <div class="source-links">
+          <a class="text-link" href="SPYNE/SPYNE.ino" target="_blank" rel="noopener">เปิดไฟล์ SPYNE/SPYNE.ino ↗</a>
           <a class="text-link" href="https://github.com/fuze-thnd/SPYNE" target="_blank" rel="noopener">รีโปโครงงาน SPYNE ↗</a>
           <a class="text-link" href="https://github.com/cdnau/SPYNE.github.io" target="_blank" rel="noopener">Source Code เว็บไซต์บน GitHub ↗</a>
         </div>

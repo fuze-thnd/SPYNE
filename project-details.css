@@ -205,6 +205,7 @@
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  background: var(--surface);
 }
 
 .source-panel > summary {
@@ -220,8 +221,14 @@
   flex-wrap: wrap;
   gap: 14px;
   padding: 12px 20px;
+  background: var(--surface);
   border-block: 1px solid var(--border);
   font-size: 12px;
+  color: var(--muted);
+}
+
+.source-toolbar a {
+  color: var(--accent);
 }
 
 .source-toolbar button {
@@ -232,23 +239,67 @@
   background: white;
   cursor: pointer;
   font-size: 12px;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .source-toolbar button:hover {
   background: var(--accent-light);
+  border-color: var(--accent);
+}
+
+#copy-status {
+  color: #1a7f37;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .source-code {
-  max-height: 540px;
+  max-height: 560px;
   margin: 0;
   padding: 24px;
   overflow: auto;
-  color: #344039;
-  background: #fafbfa;
-  font-family: Consolas, 'Courier New', monospace;
+  color: var(--text);
+  background: var(--surface);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace;
   font-size: 13px;
   line-height: 1.65;
   tab-size: 2;
+}
+
+/* Syntax Highlighting Tokens (matching site theme) */
+.token-comment {
+  color: #57606a;
+  font-style: italic;
+}
+
+.token-preproc {
+  color: #6f42c1;
+}
+
+.token-string {
+  color: #1a7f37;
+}
+
+.token-number {
+  color: #9a6700;
+}
+
+.token-type {
+  color: #0550ae;
+  font-weight: 500;
+}
+
+.token-keyword {
+  color: #cf222e;
+  font-weight: 500;
+}
+
+.token-constant {
+  color: #bc4c00;
+}
+
+.token-builtin {
+  color: #0969da;
 }
 
 .source-links {
