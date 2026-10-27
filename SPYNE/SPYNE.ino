@@ -239,12 +239,12 @@ String computeState() {
   bool headFar   = local_head_distance  > (head_base_line  + tol);
   bool chestFar  = local_chest_distance > (chest_base_line + tol);
 
-  if (headOutFrame && chestOutFrame)        return "NOT SITTING";
-  if (headNormal && chestNormal)            return "UPRIGHT";
-  if (headNear && chestNear)                return "TOO CLOSE";
-  if (headFar && chestFar)                  return "TOO FAR";
-  if (headNear && chestNormal)              return "HEAD FORWARD";
-  if (chestFar && (headNormal || headNear)) return "SLIDE / SLUMP";
+  if (headOutFrame && chestOutFrame)         return "NOT SITTING";
+  if (headNormal && chestNormal)             return "UPRIGHT";
+  if (headNear && chestNear)                 return "TOO CLOSE";
+  if (headFar && chestFar)                   return "TOO FAR";
+  if (headNear && chestNormal)               return "HEAD FORWARD";
+  if (chestFar && (headFar || headOutFrame)) return "SLIDE / SLUMP";
   return "UNBALANCED"; // else
 }
 
