@@ -21,7 +21,7 @@ Project ต้องการแก้ปัญหานั่งทำงาน
 - Arduino UNO R4 WiFi 
 - RGB LED (Tri-color LED) 
 - HC-SR04 Ultrasonic Sensor ×2 
-- Active Buzzer
+- Passive Buzzer
 - LCD 16×2 with I2C Module
 - Breadboard, Jumper Wires, และ Resistors
 
@@ -34,14 +34,15 @@ Project ต้องการแก้ปัญหานั่งทำงาน
 
 #### การจำแนกท่าทาง
 
-| State					| Eye-level Sensor	| Chest-level Sensor	|
-|---------------|-------------------|---------------------|
-| Upright				| normal						| normal							|
-| Too Close			| closer						| closer							|
-| Too Far				| farther						| farther							|
-| Forward Head	| closer						| normal							|
-| Slide/Slouch	| not detected			| closer							|
-| Not Seated		| not detected			| not detected				|
+| State | Eye-level Sensor	| Chest-level Sensor	|
+|-------|------------------|--------------------|
+| UPRIGHT | normal | normal |
+| TOO CLOSE | closer | closer |
+| TOO FAR | farther | farther |
+| FORWARD HEAD | closer | normal |
+| SLIDE/SLUMP | farther or not detected | farther |
+| NOT SEATED | not detected | not detected |
+| UNBALANCED | else | else |
 
 
 ## Source Code
