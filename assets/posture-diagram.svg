@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 460" fill="none">
+  <title>ภาพแนวคิด SPYNE: คนนั่งหันหน้าเข้าจอทางซ้าย</title>
+  <desc>เซนเซอร์สองระดับวัดศีรษะและหน้าอก เข่าและเท้าของผู้ใช้อยู่ด้านหน้าหันเข้าหาจอ</desc>
+
+  <!-- โต๊ะและจอ -->
+  <path d="M65 282H342M93 282V420M310 282V420" stroke="#a6aaa8" stroke-width="5" stroke-linecap="round"/>
+  <rect x="127" y="94" width="22" height="155" rx="5" fill="#e4e7e5" stroke="#858e88" stroke-width="2"/>
+  <path d="M138 249V276H178" stroke="#858e88" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- เซนเซอร์และเส้นวัดระยะ -->
+  <path d="M156 115H361M156 204H371" stroke="#8f9c93" stroke-width="2" stroke-dasharray="5 7"/>
+  <circle cx="150" cy="115" r="6" fill="#687d70"/>
+  <circle cx="150" cy="204" r="6" fill="#687d70"/>
+  <g fill="#717b74" font-family="Arial,sans-serif" font-size="11" letter-spacing="1">
+    <text x="187" y="100">01 / HEAD</text>
+    <text x="187" y="191">02 / CHEST</text>
+  </g>
+
+  <!-- เก้าอี้: พนักด้านหลังอยู่ทางขวา -->
+  <path d="M445 216V326H365M408 326V412M375 418H443" stroke="#a6aaa8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- ศีรษะและจมูกหันซ้ายเข้าหาจอ -->
+  <path d="M389 82C410 82 426 98 426 119C426 139 410 153 391 153C378 153 367 146 362 134H351L361 117C361 97 371 82 389 82Z" fill="#e4eae5" stroke="#52685a" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="372" cy="111" r="2.5" fill="#52685a"/>
+
+  <!-- ลำตัวและแขน -->
+  <path d="M393 164C381 195 382 240 397 310" stroke="#62796b" stroke-width="17" stroke-linecap="round"/>
+  <path d="M388 207L352 266H278" stroke="#62796b" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- ต้นขาและเข่าไปทางซ้าย เท้าชี้เข้าจอและวางบนพื้น -->
+  <path d="M397 310H327L317 411H286" stroke="#62796b" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M73 429H496" stroke="#d9ddda" stroke-width="2"/>
+</svg>

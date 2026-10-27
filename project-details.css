@@ -1,0 +1,312 @@
+/* รายละเอียดที่เพิ่ม: บทคัดย่อ / Hardware / ตารางระบบ / Source Code */
+
+/* 01. บทคัดย่อ */
+.abstract-section {
+  border-bottom: 1px solid var(--border);
+}
+
+.heading-en {
+  color: var(--muted);
+  font-size: 0.58em;
+  font-weight: 400;
+}
+
+.abstract-text {
+  max-width: 900px;
+}
+
+.abstract-text p,
+.english-abstract p {
+  line-height: 2;
+}
+
+.keywords {
+  margin-top: 24px;
+  font-size: 13px;
+}
+
+.english-abstract,
+.implementation-notes,
+.hardware-note {
+  padding: 18px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: 14px;
+}
+
+.english-abstract > div {
+  max-width: 900px;
+  margin-top: 20px;
+}
+
+/* 02. ภาพ Hardware และเครดิตภาพ */
+.hardware-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  margin-bottom: 22px;
+}
+
+.hardware-card {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.hardware-photo {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  height: 290px;
+  padding: 25px;
+  background: white;
+  border-bottom: 1px solid var(--border);
+}
+
+.hardware-photo img {
+  display: block;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hardware-card figcaption {
+  padding: 24px;
+}
+
+.hardware-card h3 {
+  margin: 10px 0 12px;
+  font-size: 22px;
+}
+
+.hardware-model {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.7px;
+}
+
+.hardware-card p {
+  font-size: 14px;
+}
+
+.hardware-card .image-credit {
+  margin-bottom: 0;
+  font-size: 11px;
+}
+
+.image-credit a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 03. รายละเอียดระบบและตาราง */
+.technical-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.technical-overview article {
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.technical-overview p {
+  font-size: 14px;
+}
+
+.subsection-title {
+  margin-top: 38px;
+  margin-bottom: 18px;
+  font-size: 20px;
+}
+
+.table-scroll {
+  margin-block: 18px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.project-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.project-table th,
+.project-table td {
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.project-table thead {
+  background: var(--surface);
+}
+
+.project-table th {
+  font-weight: 500;
+}
+
+.project-table td {
+  color: var(--muted);
+}
+
+.project-table tr:last-child > * {
+  border-bottom: 0;
+}
+
+.project-table code {
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.method-list {
+  padding-left: 24px;
+  color: var(--muted);
+  line-height: 1.95;
+}
+
+.method-list li {
+  margin-bottom: 13px;
+  padding-left: 5px;
+}
+
+.method-list strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* 04. แสดง Source Code เต็มไฟล์ */
+.source-section {
+  border-block: 1px solid var(--border);
+}
+
+.source-dependencies {
+  margin: 24px 0;
+  padding: 20px 24px;
+  border-left: 2px solid #a7b2a8;
+  background: var(--surface);
+}
+
+.source-dependencies p {
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.source-panel {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.source-panel > summary {
+  padding: 16px 20px;
+  color: var(--text);
+  background: var(--surface);
+  font-size: 15px;
+}
+
+.source-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 12px 20px;
+  border-block: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.source-toolbar button {
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.source-toolbar button:hover {
+  background: var(--accent-light);
+}
+
+.source-code {
+  max-height: 540px;
+  margin: 0;
+  padding: 24px;
+  overflow: auto;
+  color: #344039;
+  background: #fafbfa;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  tab-size: 2;
+}
+
+.source-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+nav {
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  font-size: 13px;
+}
+
+/* 05. มือถือ */
+@media (max-width: 900px) {
+  header {
+    flex-wrap: wrap;
+  }
+
+  nav {
+    order: 3;
+    width: 100%;
+  }
+}
+
+@media (max-width: 650px) {
+  .hardware-gallery,
+  .technical-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .hardware-photo {
+    height: 230px;
+  }
+
+  .hardware-card figcaption,
+  .source-dependencies {
+    padding: 20px;
+  }
+
+  .project-table {
+    min-width: 550px;
+  }
+
+  .abstract-text p {
+    font-size: 15px;
+  }
+
+  .source-code {
+    padding: 16px;
+    font-size: 12px;
+  }
+
+  nav {
+    justify-content: flex-start;
+    gap: 10px 18px;
+    font-size: 12px;
+  }
+}

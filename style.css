@@ -1,0 +1,846 @@
+/* ======================================================================
+   SPYNE — รูปแบบเว็บไซต์
+   01 สี/ตัวอักษร   02 ส่วนกลาง   03 เมนู   04 หน้าแรก   05 เนื้อหา
+   06 จำลองท่านั่ง  07 สื่อ       08 อุปกรณ์/ทีม          09 มือถือ
+   ====================================================================== */
+
+/* 01. สีและตัวอักษร — เปลี่ยนธีมได้จากตัวแปรตรงนี้ */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap');
+
+:root {
+  --background: #ffffff;
+  --surface: #f6f7f6;
+  --text: #2c312e;
+  --muted: #69716c;
+  --border: #dfe3df;
+  --accent: #52685a;
+  --accent-light: #edf1ed;
+  --radius: 8px;
+}
+
+/* 02. รูปแบบส่วนกลาง */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 30px;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: 'IBM Plex Sans Thai', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  touch-action: manipulation;
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+.wrap {
+  width: min(1120px, 88%);
+  margin-inline: auto;
+}
+
+section {
+  padding-block: 72px;
+}
+
+h1, h2, h3, p {
+  margin-top: 0;
+}
+
+h2 {
+  margin-bottom: 24px;
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.6px;
+}
+
+h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+p {
+  color: var(--muted);
+}
+
+.eyebrow {
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1.4px;
+}
+
+.small {
+  font-size: 12px;
+}
+
+
+.tag {
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+/* 03. เมนูด้านบน */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: min(1120px, 88%);
+  margin-inline: auto;
+  padding-block: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+
+nav {
+  display: flex;
+  gap: 28px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.repo {
+  font-size: 13px;
+}
+
+/* 04. หน้าแรกและภาพท่านั่ง */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  align-items: center;
+  gap: 64px;
+  padding-block: 70px;
+}
+
+h1 {
+  margin-bottom: 24px;
+  font-size: clamp(50px, 5.8vw, 76px);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -2px;
+}
+
+h1 span {
+  color: var(--accent);
+}
+
+.intro {
+  font-size: 17px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-block: 28px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  padding: 11px 20px;
+  border: 1px solid var(--text);
+  border-radius: 5px;
+  background: var(--text);
+  color: white;
+  font-size: 14px;
+}
+
+.button:hover {
+  background: #454d47;
+  color: white;
+}
+
+.text-link {
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.hero-visual {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.visual-top,
+.visual-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.5px;
+}
+
+.visual-top {
+  border-bottom: 1px solid var(--border);
+}
+
+.visual-bottom {
+  border-top: 1px solid var(--border);
+  font-size: 8px;
+}
+
+.posture-diagram {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 20px 10px;
+}
+
+.spec-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  width: min(1120px, 88%);
+  margin-inline: auto;
+  padding-block: 26px;
+  border-block: 1px solid var(--border);
+}
+
+.spec-strip > div {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  border-left: 1px solid var(--border);
+}
+
+.spec-strip > div:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.spec-strip b {
+  font-size: 29px;
+  font-weight: 500;
+}
+
+.spec-strip em {
+  font-size: 16px;
+  font-style: normal;
+}
+
+.spec-strip span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* 05. แนวคิดและหัวข้อแต่ละส่วน */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 10%;
+}
+
+.lead {
+  color: var(--text);
+  font-size: 21px;
+}
+
+.note {
+  margin-top: 24px;
+  padding: 14px 18px;
+  border-left: 2px solid #a7b2a8;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.section-head h2,
+.section-head > p {
+  margin-bottom: 0;
+}
+
+.section-head > p {
+  font-size: 13px;
+}
+
+td img {
+  width: 150px;
+  height: 110px;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+  margin: auto;
+}
+
+/* 06. ส่วนจำลองท่านั่ง */
+.lab {
+  border-block: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.sim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 30px;
+}
+
+.posture-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.posture-buttons button {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.posture-buttons button small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.posture-buttons button:hover {
+  border-color: #a3afa5;
+}
+
+.posture-buttons button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.readout {
+  padding: 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: white;
+}
+
+.readout-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.measurements {
+  display: flex;
+  gap: 22%;
+  margin-block: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.measurements span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.measurements b {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.measurements small {
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.state {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.state i {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  border-radius: 50%;
+
+  background-color: var(--dot-color, #22c55e);
+  box-shadow: 0 0 12px var(--dot-color, #22c55e);
+
+  animation: statePulse 2.4s ease-in-out infinite;
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+@keyframes statePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: scale(0.85);
+  }
+}
+
+.readout p {
+  min-height: 48px;
+  margin-block: 10px 16px;
+  font-size: 13px;
+}
+
+.baseline {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+  margin-top: 36px;
+}
+
+.flow > div {
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.flow span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.flow h3 {
+  margin-top: 8px;
+}
+
+.flow p {
+  font-size: 14px;
+}
+
+/* 07. คลิปนำเสนอ ภาพทดลอง และผลการทดลอง */
+.video-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 340px;
+  aspect-ratio: 16 / 7;
+  padding: 24px;
+  border: 1px dashed #c5ccc6;
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: center;
+}
+
+.play {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 18px;
+  border: 1px solid #bdc7bf;
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 24px;
+}
+
+.video-placeholder p {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.video-placeholder iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+.video-placeholder:has(iframe) {
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: 0;
+}
+
+.evidence {
+  padding-top: 16px;
+}
+
+.evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.media-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 205px;
+  border: 1px dashed #c5ccc6;
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.media-slot > span {
+  color: #89988c;
+  font-size: 26px;
+}
+
+.media-slot img,
+.media-slot video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.evidence-grid h3 {
+  margin-top: 18px;
+  margin-bottom: 5px;
+}
+
+.evidence-grid p {
+  font-size: 13px;
+}
+
+.results {
+  margin-top: 30px;
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.results h3 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.results p {
+  font-size: 13px;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.result-row b {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* 08. อุปกรณ์ ทีมผู้จัดทำ และท้ายหน้า */
+.hardware {
+  border-block: 1px solid var(--border);
+}
+
+.hardware h3:not(:first-child) {
+  margin-top: 28px;
+}
+
+.hardware p {
+  font-size: 14px;
+}
+
+.cloud-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+}
+
+.cloud-row code {
+  overflow-wrap: anywhere;
+  color: var(--text);
+}
+
+.cloud-row span {
+  color: var(--muted);
+}
+
+details {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+summary {
+  cursor: pointer;
+}
+
+details p {
+  margin-top: 12px;
+}
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.team article {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.team img {
+  width: 300px;
+  height: 200px;
+  border-radius: 5px;
+  object-fit: cover;
+  filter: saturate(1);
+}
+
+.team span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.team h3 {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding-block: 26px 36px;
+  border-top: 1px solid var(--border);
+}
+
+footer p {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+footer > a:last-child {
+  font-size: 12px;
+}
+
+/* 09. หน้าจอแท็บเล็ตและมือถือ */
+@media (max-width: 900px) {
+  nav {
+    gap: 16px;
+  }
+
+  .hero {
+    gap: 30px;
+  }
+
+  .split {
+    gap: 6%;
+  }
+
+  .team article {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cloud-row {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .visual-bottom {
+    flex-direction: column;
+    gap: 3px;
+  }
+}
+
+@media (max-width: 650px) {
+  header {
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-block: 18px;
+  }
+
+  nav {
+    order: 3;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+    font-size: 12px;
+  }
+
+  section {
+    padding-block: 48px;
+  }
+
+  .hero,
+  .split,
+  .sim-grid,
+  .flow,
+  .evidence-grid,
+  .team {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    gap: 30px;
+    padding-block: 42px;
+  }
+
+  h1 {
+    font-size: 56px;
+  }
+
+  .hero .eyebrow {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .intro {
+    font-size: 16px;
+  }
+
+  .spec-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .spec-strip > div:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .spec-strip b {
+    font-size: 26px;
+  }
+
+  .spec-strip span {
+    font-size: 11px;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .readout {
+    padding: 22px;
+  }
+
+  .flow {
+    gap: 16px;
+  }
+
+  .video-placeholder {
+    min-height: 280px;
+    aspect-ratio: auto;
+  }
+
+  .evidence {
+    padding-top: 0;
+  }
+
+  .media-slot {
+    height: 230px;
+  }
+
+  .results {
+    padding: 20px;
+  }
+
+  .result-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hardware .text-link {
+    display: inline-block;
+    margin-bottom: 28px;
+  }
+
+  .team article {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .split h2 br {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  #state-dot {
+    animation: none;
+  }
+}
+
