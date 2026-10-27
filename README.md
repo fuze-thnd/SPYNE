@@ -45,19 +45,18 @@ Project ต้องการแก้ปัญหานั่งทำงาน
 | UNBALANCED | else | else |
 
 
-## Source Code
+### Source Code
 
 - Arduino Sketch: [SPYNE/SPYNE.ino](SPYNE/SPYNE.ino)
 - Arduino Cloud Properties: [SPYNE/thingProperties.h](SPYNE/thingProperties.h)
 
-## อุปสรรคระหว่างทางและการแก้ปัญหา
+### Website
 
-1. **Active Buzzer เปลี่ยนเป็น Passive Buzzer**: เปลี่ยนจากการควบคุมแบบ `digitalWrite()` เป็น `tone(int pin, int frequency, int duration)` ต้องการใช้ frequency เพื่อแยกการแจ้งเตือนตามประเภทสถานะ
-2. **การจำแนกท่าทาง**: เปลี่ยนการจำแนก SLIDE/SLUMP ให้ครอบคลุมมากขึ้นโดย `chestFar && (headFar || headOutFrame)` และเพิ่มสถานะ `UNBALANCED` เมื่อไม่เข้าเงื่อนไขใดๆ ข้างต้น
-3. **LCD I2C Library**: เปลี่ยนจาก `LiquidCrystal_I2C.h` เป็น `LiquidCrystal_PCF8574.h` เนื่องจาก Arduino IoT Cloud ไม่มี library นี้อยู่ จึงเปลี่ยนเพื่อให้ใช้งานร่วมกันได้ ทำให้ method มีเปลี่ยนแปลง:
-   - `.init()` เปลี่ยนเป็น `.begin(int cols, int rows)`
-   - `.backlight()` เปลี่ยนเป็น `.setBacklight(int val)`
-4. **ขา D2 ชนกับ Arduino Cloud Library**: เดิมกำหนด `HEAD_TRIG` ไว้ที่ขา D2 แต่ไม่สามารถใช้งานได้ เนื่องจาก Arduino Cloud Network Configurator (ส่วนจัดการ BLE และ WiFi setup) จองขา D2 ไว้เป็น default "reset" pin และจะเซ็ตขานี้เป็น `INPUT` เมื่อรัน `ArduinoCloud.begin()` ทำให้ไม่สามารถส่งพัลส์ Trigger ได้ จึงแก้ไขโดยย้าย `HEAD_TRIG` ไปใช้ขา D7 แทน
+https://fuze-thnd.github.io/SPYNE/
+
+### Demo Video
+
+https://youtu.be/yrfo-nZxjXc
 
 ## Contributors
 
