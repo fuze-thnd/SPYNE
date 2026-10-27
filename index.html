@@ -44,6 +44,7 @@
           ทีมผู้จัดทำ
         </a>
         <a href="#hardware">Hardware</a>
+        <a href="#challenges">อุปสรรคระหว่างทาง</a>
         <a href="#source-code">Source Code</a>
       </nav>
       <a class="repo" href="https://github.com/fuze-thnd/SPYNE" target="_blank" rel="noopener">
@@ -455,11 +456,11 @@
           <table class="project-table">
             <thead><tr><th scope="col">อุปกรณ์ / สัญญาณ</th><th scope="col">ขาบอร์ด</th><th scope="col">ชื่อใน Source Code</th></tr></thead>
             <tbody>
-              <tr><th scope="row">HC-SR04 ระดับศีรษะ · Trig / Echo</th><td>D2 / D3</td><td><code>HEAD_TRIG / HEAD_ECHO</code></td></tr>
+              <tr><th scope="row">HC-SR04 ระดับศีรษะ · Trig / Echo</th><td>D7 / D3</td><td><code>HEAD_TRIG / HEAD_ECHO</code></td></tr>
               <tr><th scope="row">HC-SR04 ระดับหน้าอก · Trig / Echo</th><td>D4 / D5</td><td><code>CHEST_TRIG / CHEST_ECHO</code></td></tr>
               <tr><th scope="row">Buzzer</th><td>D6</td><td><code>BUZZER_PIN</code></td></tr>
               <tr><th scope="row">RGB LED · R / G / B</th><td>D9 / D10 / D11</td><td><code>LED_R / LED_G / LED_B</code></td></tr>
-              <tr><th scope="row">LCD 16×2</th><td>I2C · SDA / SCL</td><td><code>LiquidCrystal_I2C lcd(0x27, 16, 2)</code></td></tr>
+              <tr><th scope="row">LCD 16×2</th><td>I2C · SDA / SCL</td><td><code>LiquidCrystal_PCF8574 lcd(0x27)</code></td></tr>
             </tbody>
           </table>
         </div>
@@ -485,7 +486,7 @@
               <tr><th scope="row"><code>TOO CLOSE</code></th><td>ศีรษะใกล้ และหน้าอกใกล้</td></tr>
               <tr><th scope="row"><code>TOO FAR</code></th><td>ศีรษะไกล และหน้าอกไกล</td></tr>
               <tr><th scope="row"><code>HEAD FORWARD</code></th><td>ศีรษะใกล้ แต่หน้าอกปกติ</td></tr>
-              <tr><th scope="row"><code>SLIDE / SLUMP</code></th><td>หน้าอกไกล และศีรษะปกติหรือใกล้</td></tr>
+              <tr><th scope="row"><code>SLIDE / SLUMP</code></th><td>หน้าอกไกล และศีรษะไกลหรือหลุดระยะโฟกัส</td></tr>
               <tr><th scope="row"><code>UNBALANCED</code></th><td>ไม่ตรงกับเงื่อนไขข้างต้น</td></tr>
             </tbody>
           </table>
@@ -527,7 +528,61 @@
         </details>
       </section>
 
-      <!-- 08B. Source Code — เนื้อหาโค้ดมาจาก SPYNE/SPYNE.ino -->
+            <!-- 08B. อุปสรรคระหว่างทางและการแก้ปัญหา -->
+      <section id="challenges" class="wrap challenges-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">OBSTACLES &amp; SOLUTIONS</p>
+            <h2>อุปสรรคระหว่างทางและการแก้ปัญหา</h2>
+          </div>
+          <p>การปรับปรุงด้านฮาร์ดแวร์ อัลกอริทึม และความเข้ากันได้ของไลบรารีระหว่างการพัฒนา</p>
+        </div>
+
+        <div class="challenges-grid">
+          <!-- 01. Active -> Passive Buzzer -->
+          <article class="challenge-card">
+            <span class="challenge-badge">ฮาร์ดแวร์และการแจ้งเตือน</span>
+            <h3>Active Buzzer เปลี่ยนเป็น Passive Buzzer</h3>
+            <p>เปลี่ยนจากการควบคุมแบบ <code>digitalWrite()</code> เป็น <code>tone(int pin, int frequency, int duration)</code> เนื่องจากต้องการใช้ frequency เพื่อแยกการแจ้งเตือนตามประเภทสถานะได้อย่างยืดหยุ่น</p>
+            <div class="challenge-detail">
+              <strong>เหตุผลและการประยุกต์ใช้:</strong> Active Buzzer มีเสียงคงที่ระดับเดียว การใช้ Passive Buzzer ทำให้สร้างเสียงนับถอยหลังระหว่าง Calibration (400 Hz) และเสียงเตือนท่านั่งผิดสรีระ (1,000 Hz) ได้อย่างชัดเจน
+            </div>
+          </article>
+
+          <!-- 02. การจำแนกท่าทาง -->
+          <article class="challenge-card">
+            <span class="challenge-badge">อัลกอริทึมและการประมวลผล</span>
+            <h3>การจำแนกท่าทาง (Posture Classification)</h3>
+            <p>เปลี่ยนการจำแนกท่า <code>SLIDE / SLUMP</code> ให้ครอบคลุมมากขึ้นโดยใช้เงื่อนไข <code>chestFar &amp;&amp; (headFar || headOutFrame)</code> และเพิ่มสถานะ <code>UNBALANCED</code> เมื่อไม่เข้าเงื่อนไขใดๆ ข้างต้น</p>
+            <div class="challenge-detail">
+              <strong>เหตุผลและการประยุกต์ใช้:</strong> ผู้ใช้นั่งไถลตัวอาจทำให้ศีรษะอยู่ไกลหรือหลุดมุมตรวจจับของเซนเซอร์บน การปรับเงื่อนไขทำให้จำแนกได้แม่นยำ และมีสถานะ UNBALANCED รองรับกรณีข้อมูลไม่อยู่ในสมดุล
+            </div>
+          </article>
+
+          <!-- 03. LCD I2C Library -->
+          <article class="challenge-card">
+            <span class="challenge-badge">Arduino Cloud &amp; ไลบรารี</span>
+            <h3>LCD I2C Library Compatibility</h3>
+            <p>เปลี่ยนจาก <code>LiquidCrystal_I2C.h</code> เป็น <code>LiquidCrystal_PCF8574.h</code> เนื่องจาก Arduino IoT Cloud ไม่มี library นี้อยู่ จึงเปลี่ยนเพื่อให้สามารถคอมไพล์และใช้งานร่วมกันได้</p>
+            <div class="challenge-detail">
+              <strong>การเปลี่ยนแปลงคำสั่ง (Methods):</strong>
+              เปลี่ยนจากการใช้ <code>.init()</code> เป็น <code>.begin(16, 2)</code> และจาก <code>.backlight()</code> เป็น <code>.setBacklight(255)</code>
+            </div>
+          </article>
+        
+          <!-- 04. ขา D2 ชนกับ Cloud Library -->
+          <article class="challenge-card">
+            <span class="challenge-badge">พินฮาร์ดแวร์ &amp; Cloud Network</span>
+            <h3>ขา D2 ใช้งานไม่ได้ (ชนกับ Cloud Library)</h3>
+            <p>เดิมกำหนด <code>HEAD_TRIG</code> ไว้ที่ขา D2 แต่พบว่าเซนเซอร์ไม่ทำงาน เนื่องจากไลบรารี Arduino Cloud Network Configurator (ส่วนจัดการ BLE และ WiFi setup) จองขา D2 ไว้เป็น default &ldquo;reset/reconfigure&rdquo; pin</p>
+            <div class="challenge-detail">
+              <strong>ปัญหาและการแก้ไข:</strong> เมื่อคำสั่ง <code>ArduinoCloud.begin()</code> ทำงาน ระบบจะบังคับเซ็ตขา D2 ให้เป็น <code>INPUT</code> อัตโนมัติ ทำให้ไม่สามารถส่งสัญญาณ Trigger พัลส์ได้ จึงแก้ไขโดยการย้ายขา <code>HEAD_TRIG</code> ไปใช้งานที่ขา D7 แทน
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 08C. Source Code — เนื้อหาโค้ดมาจาก SPYNE/SPYNE.ino -->
       <section id="source-code" class="wrap source-section">
         <div class="section-head">
           <div>
@@ -895,37 +950,47 @@
           ทีมเบื้องหลัง SPYNE
         </h2>
         <div class="team">
-          <article>
+          <!-- นายกฤตชัย ถาวรพันธุ์ -->
+          <article class="team-card">
             <img src="assets/0002.jpg" alt="กฤตชัย ถาวรพันธุ์" loading="lazy">
-            <div>
-              <span>
-                68070002 / เก้า
-              </span>
-              <h3>
-                กฤตชัย ถาวรพันธุ์
-              </h3>
+            <div class="team-info">
+              <span class="team-id">68070002 / เก้า</span>
+              <h3>นายกฤตชัย ถาวรพันธุ์</h3>
+              <span class="team-role">Hardware &amp; Poster (33%)</span>
+              <ul class="team-tasks">
+                <li>เชื่อมต่ออุปกรณ์</li>
+                <li>ทำอุปกรณ์จับยึดหน้าจอเข้ากับ Ultrasonic Sensor</li>
+                <li>ออกแบบโปสเตอร์ A1</li>
+              </ul>
             </div>
           </article>
-          <article>
-            <img src="assets/0029.jpg" alt="ชินดนัย เรืองสมบัติ" loading="lazy">
-            <div>
-              <span>
-                68070029 / อู๋
-              </span>
-              <h3>
-                ชินดนัย เรืองสมบัติ
-              </h3>
-            </div>
-          </article>
-          <article>
+
+          <!-- นายธนดล กระจ่างโรจน์ -->
+          <article class="team-card">
             <img src="assets/0057.png" alt="ธนดล กระจ่างโรจน์" loading="lazy">
-            <div>
-              <span>
-                68070057 / ฟิวส์
-              </span>
-              <h3>
-                ธนดล กระจ่างโรจน์
-              </h3>
+            <div class="team-info">
+              <span class="team-id">68070057 / ฟิวส์</span>
+              <h3>นายธนดล กระจ่างโรจน์</h3>
+              <span class="team-role">Software &amp; Arduino Cloud (33%)</span>
+              <ul class="team-tasks">
+                <li>Algorithm จำแนกท่านั่ง</li>
+                <li>แสดงผลผ่าน RGB LED, LCD, Buzzer</li>
+                <li>เชื่อมข้อมูลจาก Arduino มายัง Arduino Cloud</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- นายชินดนัย เรืองสมบัติ -->
+          <article class="team-card">
+            <img src="assets/0029.jpg" alt="ชินดนัย เรืองสมบัติ" loading="lazy">
+            <div class="team-info">
+              <span class="team-id">68070029 / อู๋</span>
+              <h3>นายชินดนัย เรืองสมบัติ</h3>
+              <span class="team-role">Data Analyst &amp; Web development (34%)</span>
+              <ul class="team-tasks">
+                <li>นำข้อมูลที่เก็บมาประมวลผล เพื่อสร้างกราฟสรุปพฤติกรรมในแต่ละวัน</li>
+                <li>พัฒนาและ Deploy เว็บไซต์โปรเจกต์ผ่าน GitHub.io</li>
+              </ul>
             </div>
           </article>
         </div>

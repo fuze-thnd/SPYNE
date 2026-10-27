@@ -23,7 +23,7 @@ window.SPYNE_CONTENT = {
     {
       title: 'ทดสอบการจำแนกท่านั่ง',
       note: 'คลิปทดลองแต่ละท่า พร้อมระยะที่อ่านได้และสถานะบน LCD',
-      src: '',
+      src: 'assets/classify posture.mp4',
       type: 'video'
     },
     {

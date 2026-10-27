@@ -49,10 +49,19 @@ Project ต้องการแก้ปัญหานั่งทำงาน
 - Arduino Sketch: [SPYNE/SPYNE.ino](SPYNE/SPYNE.ino)
 - Arduino Cloud Properties: [SPYNE/thingProperties.h](SPYNE/thingProperties.h)
 
+## อุปสรรคระหว่างทางและการแก้ปัญหา
+
+1. **Active Buzzer เปลี่ยนเป็น Passive Buzzer**: เปลี่ยนจากการควบคุมแบบ `digitalWrite()` เป็น `tone(int pin, int frequency, int duration)` ต้องการใช้ frequency เพื่อแยกการแจ้งเตือนตามประเภทสถานะ
+2. **การจำแนกท่าทาง**: เปลี่ยนการจำแนก SLIDE/SLUMP ให้ครอบคลุมมากขึ้นโดย `chestFar && (headFar || headOutFrame)` และเพิ่มสถานะ `UNBALANCED` เมื่อไม่เข้าเงื่อนไขใดๆ ข้างต้น
+3. **LCD I2C Library**: เปลี่ยนจาก `LiquidCrystal_I2C.h` เป็น `LiquidCrystal_PCF8574.h` เนื่องจาก Arduino IoT Cloud ไม่มี library นี้อยู่ จึงเปลี่ยนเพื่อให้ใช้งานร่วมกันได้ ทำให้ method มีเปลี่ยนแปลง:
+   - `.init()` เปลี่ยนเป็น `.begin(int cols, int rows)`
+   - `.backlight()` เปลี่ยนเป็น `.setBacklight(int val)`
+4. **ขา D2 ชนกับ Arduino Cloud Library**: เดิมกำหนด `HEAD_TRIG` ไว้ที่ขา D2 แต่ไม่สามารถใช้งานได้ เนื่องจาก Arduino Cloud Network Configurator (ส่วนจัดการ BLE และ WiFi setup) จองขา D2 ไว้เป็น default "reset" pin และจะเซ็ตขานี้เป็น `INPUT` เมื่อรัน `ArduinoCloud.begin()` ทำให้ไม่สามารถส่งพัลส์ Trigger ได้ จึงแก้ไขโดยย้าย `HEAD_TRIG` ไปใช้ขา D7 แทน
+
 ## Contributors
 
-| ID        | Name                  	| Img                                                        |
-|-----------|-------------------------|------------------------------------------------------------|
-| 68070002  | นายกฤตชัย ถาวรพันธุ์ (เก้า) 	| <img height="150" src="assets/img/contributors/0002.jpg">  |
-| 68070029  | นายชินดนัย เรืองสมบัติ (อู๋)   | <img height="150" src="assets/img/contributors/0029.jpg">  |
-| 68070057  | นายธนดล กระจ่างโรจน์ (ฟิวส์) | <img height="150" src="assets/img/contributors/0057.png">  |
+| ID | Name | Role & Responsibility | Img |
+|---|---|---|---|
+| 68070002 | นายกฤตชัย ถาวรพันธุ์ (เก้า) | **Hardware & Poster (33%)**<br>• เชื่อมต่ออุปกรณ์<br>• ทำอุปกรณ์จับยึดหน้าจอเข้ากับ Ultrasonic Sensor<br>• ออกแบบโปสเตอร์ A1 | <img height="150" src="assets/0002.jpg"> |
+| 68070057 | นายธนดล กระจ่างโรจน์ (ฟิวส์) | **Software & Arduino Cloud (33%)**<br>• Algorithm จำแนกท่านั่ง<br>• แสดงผลผ่าน RGB LED, LCD, Buzzer<br>• เชื่อมข้อมูลจาก Arduino มายัง Arduino Cloud | <img height="150" src="assets/0057.png"> |
+| 68070029 | นายชินดนัย เรืองสมบัติ (อู๋) | **Data Analyst & Web development (34%)**<br>• นำข้อมูลที่เก็บมาประมวลผล เพื่อสร้างกราฟสรุปพฤติกรรมในแต่ละวัน<br>• พัฒนาและ Deploy เว็บไซต์โปรเจกต์ผ่าน GitHub.io | <img height="150" src="assets/0029.jpg"> |
