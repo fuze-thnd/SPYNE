@@ -58,6 +58,10 @@ https://fuze-thnd.github.io/SPYNE/
 
 https://youtu.be/yrfo-nZxjXc
 
+### Poster
+
+https://drive.google.com/file/d/13uWx6st5vRE2aZVdP957d8B1LvY8reV-/view?usp=drive_link
+
 ## Contributors
 
 | ID | Name | Role & Responsibility | Img |
